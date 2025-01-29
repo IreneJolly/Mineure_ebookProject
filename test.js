@@ -1,4 +1,4 @@
-import {epub} from "epub-gen";
+const Epub = require("epub-gen");
 
 const options = {
   title: "Moby-Dick",
@@ -14,8 +14,4 @@ const options = {
   ],
 };
 
-new epub(options).promise.then(() => console.log('Done'));
-
-export default function Page() {
-  return <h1>Hello, Next.js!</h1>
-}
+new Epub(options).promise.then(() => console.log('Done'));
