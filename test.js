@@ -1,17 +1,5 @@
 const Epub = require("epub-gen");
 
-const options = {
-  title: "Moby-Dick",
-  author: "Herman Melville",
-  output: "./moby-dick.epub",
-  content: [
-    {
-      title: "Chapter 1: Loomings",
-      data: `<p>
-        Call me Ishmael. Some years ago—never mind how long precisely
-      </p>`,
-    },
-  ],
-};
+let options = require("./public/livre.json")
 
 new Epub(options).promise.then(() => console.log('Done'));
