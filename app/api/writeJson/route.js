@@ -1,25 +1,21 @@
-// app/api/writeJson/route.js  
-import fs from 'fs';
+// /api/writeJson/route.js  
+import fs from 'fs/promises'; // Importer les promesses de fs  
 import path from 'path';
 
 export async function POST(req) {
   try {
-    const options = await req.json(); // Get the JSON data from the request body
+    const options = await req.json(); // Obtenir les données JSON du corps de la requête
 
-    // Define the path to your JSON file  
+    // Définir le chemin vers le fichier JSON  
     const jsonFilePath = path.join(process.cwd(), 'public/livre.json');
 
-    // Write the updated object back to the JSON file  
-    fs.writeFile(jsonFilePath, JSON.stringify(options, null, 2), (err) => {
-      if (err) {
-        console.error('Error writing the file:', err);
-        return new Response(JSON.stringify({ error: 'Error writing the file' }), { status: 500 });
-      }
-      console.log('JSON file updated successfully.');
-      return new Response(JSON.stringify({ message: 'JSON file updated successfully.' }), { status: 200 });
-    });
+    // Écrire l'objet mis à jour dans le fichier JSON  
+    await fs.writeFile(jsonFilePath, JSON.stringify(options, null, 2)); // Utiliser la version promesse
+
+    console.log('Fichier JSON mis à jour avec succès.');
+    return new Response(JSON.stringify({ message: 'Fichier JSON mis à jour avec succès.' }), { status: 200 });
   } catch (error) {
-    console.error('Error processing request:', error);
-    return new Response(JSON.stringify({ error: 'Error processing request.' }), { status: 500 });
+    console.error('Erreur lors du traitement de la requête :', error);
+    return new Response(JSON.stringify({ error: 'Erreur lors du traitement de la requête.' }), { status: 500 });
   }
 }

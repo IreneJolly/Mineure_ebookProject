@@ -1,4 +1,4 @@
-// app/api/run-test/route.js  
+// /api/run-test/route.js  
 import { exec } from 'child_process';
 
 export async function POST(req) {
