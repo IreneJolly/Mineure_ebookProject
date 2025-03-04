@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ccc;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+.sidebar {
+    width: 200px;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.editor-container {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+
+.sidebar h2 {
+    color: black;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    color: black;
+    cursor: pointer;
+    margin: 8px 0;
+    transition: color 0.3s;
+}
+
+.sidebar li:hover {
+    color: blue;
+}
+
+.editor-container {
+    flex-grow: 1;
+    padding: 16px;
+}
+
+.quill-editor {
+    height: 400px;
+    border: 1px solid #ccc;
+}

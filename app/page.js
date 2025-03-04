@@ -1,16 +1,18 @@
-// app/page.js
 "use client";
 
 import { useState } from "react";
-import { Editor } from '@tinymce/tinymce-react';
+import dynamic from "next/dynamic"; // Import dynamic from next/dynamic  
+import '../styles/global.css'; // Import du fichier CSS global
 
 let options = require("../public/livre.json");
-const fs = require("fs");
-const path = require("path");
-//const screen = window.innerHeight;
+
+const QuillEditor = dynamic(() => import('../component/QuillEditor'), {
+  ssr: false, // This ensures the QuillEditor is only rendered on the client  
+});
 
 export default function Home() {
   const [message, setMessage] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0); // État pour suivre l'index actuel
 
   const handleRunTests = async () => {
     try {
@@ -30,33 +32,45 @@ export default function Home() {
         method: "POST",
       });
 
-      setMessage("Fichier télécharger !");
+      setMessage("Fichier téléchargé !");
     } catch (error) {
       console.error("Erreur lors de l'exécution des tests :", error);
       setMessage("Erreur lors de l'exécution des tests.");
     }
   };
 
+  // Fonction pour gérer le changement de page  
+  const handleSelectPage = (index) => {
+    setCurrentIndex(index); // Met à jour l'index courant  
+  };
+
   return (
     <div className="h-full">
-      <button onClick={handleRunTests}>Exécuter les Tests</button>
-      {message && <p>{message}</p>}
-      <div className="h-full">
-        <Editor
-          apiKey="mqrn10qzo5ozw8d2g0v942iz34s46nd6zq4c71dbyywjkuvp"
-          init={{
-            height: 500,
-            menubar: false,
-            toolbar:
-              "undo redo | styles | bold italic | alignleft aligncenter alignright | bullist numlist outdent | link image",
-          }}
-          onEditorChange={(content) => (options.content[0].data = content)}
-        />
+      <div className="container">
+        <div className="sidebar">
+          <h2>Liste des Pages</h2>
+          <ul>
+            {options.content.map((item, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelectPage(index)} // Appelle la fonction lors du clic  
+              >
+                {item.title}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="editor-container">
+          <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css" />
+          <h3>{options.content[currentIndex]?.title || "Sélectionnez un chapitre"}</h3> {/* Affiche le titre du chapitre sélectionné */}
+          <QuillEditor
+            initialContent={options.content[currentIndex]?.data || ""} // Passer le contenu initial  
+          />
+        </div>
       </div>
     </div>
   );
 }
-
 /* Idee : 
 - Faire des boutons pour envoyer d'une page vers une autre
 - authentification pour continuer la modification du fichier sauvegarder temporairement sur supabase

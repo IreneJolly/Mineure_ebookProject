@@ -1,12 +1,14 @@
 import Header from "../component/Header";
+import '../styles/global.css';
+import { ThemeProvider } from "next-themes";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <Header classname="overflow-x-hidden"></Header>
-        {children}
-      </body>
+    <html lang="en" suppressHydrationWarning>
+        <body className="bg-black">
+          <Header />
+          {children}
+        </body>
     </html>
   );
 }
