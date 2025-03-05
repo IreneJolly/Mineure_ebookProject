@@ -4,12 +4,16 @@
   "output": "./vhjbh.epub",
   "content": [
     {
-      "title": "Chapter 1: Loomings",
-      "data": "<p>test modifications</p>"
+      "title": "Chapter 1: Looming",
+      "data": "<p>Bla</p>"
     },
     {
-      "title": "Chapter : Test",
-      "data": "<h3>Réussi !</h3>"
+      "title": "Chapitre 2: Test",
+      "data": "<p>Test</p>"
+    },
+    {
+      "title": "Chapitre 3: deuxième jout",
+      "data": "<p><br></p>"
     }
   ]
 }
