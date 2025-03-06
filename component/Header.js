@@ -15,7 +15,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(options), // Send the modified options in the request body  
+        body: JSON.stringify(options), 
       });
 
       if (!response.ok) {
@@ -26,19 +26,19 @@ export default function Home() {
         method: "POST",
       });
 
-      setMessage("Fichier télécharger !");
+      alert("Fichier télécharger !");
     } catch (error) {
       console.error("Erreur lors de l'exécution des tests :", error);
-      setMessage("Erreur lors de l'exécution des tests.");
+      alert("Erreur lors de l'exécution des tests.");
     }
   };
 
   return (
     <header>
-      <button onClick={handleRunTests} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-        Exécuter les Tests
+      <button onClick={handleRunTests}>
+        Télécharger le Ebook
       </button>
-      <h1 className="flex text-center mx-4">Créateur de ebook</h1>
+      <h1>Créateur de ebook</h1>
       <div></div>
     </header>
   );

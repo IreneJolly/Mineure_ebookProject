@@ -12,6 +12,9 @@ const QuillEditor = dynamic(() => import("../component/QuillEditor"), {
 
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0); // État pour suivre l'index actuel
+  const [editorContent, setEditorContent] = useState(
+    options.content[currentIndex]?.data
+  );
 
   const handleSelectPage = (index) => {
     setCurrentIndex(index);
@@ -37,28 +40,49 @@ export default function Home() {
   };
 
   const handleDeleteChapter = () => {
-    console.log(currentIndex);
     options.content.splice(currentIndex, 1);
-    console.log(options.content);
     handleRunTests();
   };
 
   const handleTitleChange = () => {
-    options.content[currentIndex].title = document.getElementById("title").value;
-    document.getElementById("title").value = options.content[currentIndex].title;
+    const newTitle = document.getElementById("title").value; // Obtenir le titre depuis l'input
+    options.content[currentIndex].title = newTitle;
     handleRunTests();
+  };
+
+  const handleContentChange = () => {
+    options.content[currentIndex].data = editorContent;
+    handleRunTests();
+  };
+
+  const handlePromptForTitleChange = () => {
+    const newTitle = prompt("Entrez le nouveau titre du Livre:", options.title);
+    if (newTitle !== null && newTitle.trim() !== "") {
+      options.title = newTitle;
+      handleRunTests();
+    }
+  };
+
+  const handlePromptForAuthorChange = () => {
+    const newTitle = prompt("Entrez le nouveau titre du Livre:", options.author);
+    if (newTitle !== null && newTitle.trim() !== "") {
+      options.author = newTitle;
+      handleRunTests();
+    }
   };
 
   return (
     <div className="h-full">
       <div className="container">
         <div className="sidebar">
-          <h2>Liste des Chapitres</h2>
+          <h2>
+            {options.title} de {options.author}
+          </h2>
           <ul>
             {options.content.map((item, index) => (
               <li
                 key={index}
-                onClick={() => handleSelectPage(index)} // Appelle la fonction lors du clic  
+                onClick={() => handleSelectPage(index)} // Appelle la fonction lors du clic
               >
                 {item.title}
               </li>
@@ -66,12 +90,14 @@ export default function Home() {
           </ul>
           <button
             onClick={handleAddChapter}
+            className="button-spacing"
             style={{ fontSize: "24px", cursor: "pointer" }}
           >
             +
           </button>
           <button
             onClick={handleDeleteChapter}
+            className="button-spacing"
             style={{ background: "none", border: "none", cursor: "pointer" }}
           >
             <img
@@ -80,21 +106,44 @@ export default function Home() {
               style={{ width: "24px", height: "24px" }}
             />
           </button>
+          <button
+            onClick={handlePromptForTitleChange}
+            className="button-spacing"
+          >
+            Changer le titre du Livre
+          </button>
+          <button
+            onClick={handlePromptForAuthorChange}
+            className="button-spacing"
+          >
+            Changer l'auteur du Livre
+          </button>{" "}
+          {/* Nouveau bouton */}
         </div>
         <div className="editor-container">
           <link
             rel="stylesheet"
             href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
           />
-          <h3>{options.content[currentIndex]?.title || "Sélectionnez un chapitre"}</h3>
+          <h3>
+            {options.content[currentIndex]?.title || "Sélectionnez un chapitre"}
+          </h3>
           <input
             type="text"
             id="title"
-            defaultValue={options.content[currentIndex].title}
+            defaultValue={
+              options.content[currentIndex]?.title || "Sélectionnez un chapitre"
+            }
           />
-          <button onClick={handleTitleChange}>Modifier</button>
+          <button onClick={handleTitleChange} className="button-spacing">
+            Modifier le titre du chapitre
+          </button>
+          <button onClick={handleContentChange} className="button-spacing">
+            Sauvegarder ce chapitre
+          </button>
           <QuillEditor
             initialContent={options.content[currentIndex]?.data || ""}
+            onChange={setEditorContent}
             index={currentIndex}
           />
         </div>

@@ -1,25 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Quill from "quill";
+import "quill/dist/quill.snow.css";
 
-let options = require("../public/livre.json");
-
-const QuillEditor = ({ initialContent, index }) => {
+const QuillEditor = ({ initialContent, index, onChange }) => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
-
-  const handleRunTests = async () => {
-    try {
-      const response = await fetch("../api/writeJson", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(options), // Send the modified options in the request body
-      });
-    } catch (error) {
-      console.error("Erreur lors de l'exécution des tests :", error);
-    }
-  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -27,32 +12,66 @@ const QuillEditor = ({ initialContent, index }) => {
         quillRef.current = new Quill(editorRef.current, {
           theme: "snow",
           modules: {
-            toolbar: [
-              [{ header: [1, 2, false] }],
-              ["bold", "italic", "underline"],
-              ["image", "code-block"],
-              [{ list: "ordered" }, { list: "bullet" }],
-            ],
+            toolbar: {
+              container: [
+                [{ header: [1, 2, false] }],
+                [{ color: [] }],
+                ["bold", "italic", "underline", "strike"],
+                ["link"],
+                [{ list: "ordered" }],
+              ],
+            },
+          },
+          customLinkButton: {
+            addLink: () => new CustomLinkButton(quillRef.current, {}),
           },
         });
 
         quillRef.current.on("text-change", () => {
-          console.log(options.content[index].data);
-          options.content[index].data = quillRef.current.root.innerHTML;
-          handleRunTests();
+          onChange(quillRef.current.root.innerHTML);
         });
       }
-
       quillRef.current.clipboard.dangerouslyPasteHTML(initialContent);
     }
-  }, [initialContent, index]);
+  }, [initialContent, index, onChange]);
+
+  /*
+  // Fonction pour ajouter un lien personnalisé  
+  const addCustomLink = () => {
+    const chapterName = prompt("Entrez le nom du chapitre");
+
+    if (index && chapterName) {
+      // Transformer le nom du chapitre en format correct  
+      const formattedName = chapterName  
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '') // Supprimer les caractères spéciaux  
+        .replace(/\s+/g, '-') // Remplacer les espaces par des -
+        .trim();
+
+      const link = `${index}_${formattedName}.xhtml`;
+
+      const range = quillRef.current.getSelection();
+      if (range) {
+        quillRef.current.insertText(range.index, chapterName, { link: link });
+      }
+    }
+  };*/
+
+  // Utiliser un autre useEffect pour ajouter le bouton après l'initialisation de Quill
+  /*useEffect(() => {
+    const toolbar = editorRef.current.querySelector('.ql-toolbar');
+    if (toolbar) {
+      const customLinkButton = document.createElement('button');
+      customLinkButton.innerHTML = 'Ajouter Lien Chapitre';
+      customLinkButton.classList.add('ql-custom-link');
+      customLinkButton.addEventListener('click', addCustomLink);
+      toolbar.appendChild(customLinkButton);
+    }
+  }, []); // Exécuter ce useEffect une seule fois après le premier rendu*/
 
   return (
-    <div>
-      <div
-        ref={editorRef}
-        style={{ height: "400px", border: "1px solid #ccc" }}
-      ></div>
+    <div id="editor-container">
+      <div ref={editorRef} style={{ border: "1px solid #ccc" , height: "60vh"}}></div>
     </div>
   );
 };
