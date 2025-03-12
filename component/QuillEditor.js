@@ -22,10 +22,28 @@ const QuillEditor = ({ initialContent, index, onChange }) => {
               ],
             },
           },
-          customLinkButton: {
-            addLink: () => new CustomLinkButton(quillRef.current, {}),
-          },
         });
+        /*const myButton = new QuillToolbarButton({
+            icon: `<svg viewBox="0 0 18 18"> <path class="ql-stroke" d="M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3"></path></svg>`,
+          });
+  
+          myButton.onClick = function (quill) {
+            const { index, length } = quill.selection.savedRange;
+            const selectedText = quill.getText(index, length);
+            const newText = selectedText.toUpperCase();
+            quill.deleteText(index, length);
+            quill.insertText(index, newText);
+            quill.setSelection(index, newText.length);
+          };
+          myButton.attach(quill);
+        
+         const formattedTitle = title.toLowerCase().replace(/\s+/g, '-');
+    // Créer l'URL  
+    const url = `${index}_${formattedTitle}.xhtml`;
+    
+    // Insérer le lien dans l'éditeur  
+    const range = quill.getSelection();
+    quill.insertText(range.index, title, 'link', url); */
 
         quillRef.current.on("text-change", () => {
           onChange(quillRef.current.root.innerHTML);
@@ -35,43 +53,12 @@ const QuillEditor = ({ initialContent, index, onChange }) => {
     }
   }, [initialContent, index, onChange]);
 
-  /*
-  // Fonction pour ajouter un lien personnalisé  
-  const addCustomLink = () => {
-    const chapterName = prompt("Entrez le nom du chapitre");
-
-    if (index && chapterName) {
-      // Transformer le nom du chapitre en format correct  
-      const formattedName = chapterName  
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, '') // Supprimer les caractères spéciaux  
-        .replace(/\s+/g, '-') // Remplacer les espaces par des -
-        .trim();
-
-      const link = `${index}_${formattedName}.xhtml`;
-
-      const range = quillRef.current.getSelection();
-      if (range) {
-        quillRef.current.insertText(range.index, chapterName, { link: link });
-      }
-    }
-  };*/
-
-  // Utiliser un autre useEffect pour ajouter le bouton après l'initialisation de Quill
-  /*useEffect(() => {
-    const toolbar = editorRef.current.querySelector('.ql-toolbar');
-    if (toolbar) {
-      const customLinkButton = document.createElement('button');
-      customLinkButton.innerHTML = 'Ajouter Lien Chapitre';
-      customLinkButton.classList.add('ql-custom-link');
-      customLinkButton.addEventListener('click', addCustomLink);
-      toolbar.appendChild(customLinkButton);
-    }
-  }, []); // Exécuter ce useEffect une seule fois après le premier rendu*/
-
   return (
     <div id="editor-container">
-      <div ref={editorRef} style={{ border: "1px solid #ccc" , height: "60vh"}}></div>
+      <div
+        ref={editorRef}
+        style={{ border: "1px solid #ccc", height: "60vh" }}
+      ></div>
     </div>
   );
 };

@@ -6,8 +6,6 @@ import '../styles/global.css';
 let options = require("../public/livre.json");
 
 export default function Home() {
-  const [message, setMessage] = useState("");
-
   const handleRunTests = async () => {
     try {
       const response = await fetch("../api/writeJson", {

@@ -45,7 +45,7 @@ export default function Home() {
   };
 
   const handleTitleChange = () => {
-    const newTitle = document.getElementById("title").value; // Obtenir le titre depuis l'input
+    const newTitle = prompt("Entrez le nouveau nom du Chapitre:", options.content[currentIndex].title);
     options.content[currentIndex].title = newTitle;
     handleRunTests();
   };
@@ -128,13 +128,6 @@ export default function Home() {
           <h3>
             {options.content[currentIndex]?.title || "Sélectionnez un chapitre"}
           </h3>
-          <input
-            type="text"
-            id="title"
-            defaultValue={
-              options.content[currentIndex]?.title || "Sélectionnez un chapitre"
-            }
-          />
           <button onClick={handleTitleChange} className="button-spacing">
             Modifier le titre du chapitre
           </button>
