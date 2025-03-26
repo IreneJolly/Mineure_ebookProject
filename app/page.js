@@ -59,10 +59,9 @@ export default function Home() {
       const { data, error } = await supabase  
         .from('livres')
         .update({
-          author: options.author,
           content: options.content,
         })
-        .eq('id', options.id); // Utilisez l'ID de l'enregistrement
+        .eq('id', 1); // Utilisez l'ID de l'enregistrement
 
       if (error) throw error;
       console.log('Données mises à jour avec succès:', data);
@@ -108,8 +107,9 @@ export default function Home() {
         updatedContent[currentIndex].data = editorContent;
         return { ...prev, content: updatedContent };
       });
-      handleRunTests();
+      
     }
+    handleRunTests();
   };
 
   const handlePromptForTitleChange = () => {
