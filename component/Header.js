@@ -8,7 +8,7 @@ let options = require("../public/livre.json");
 export default function Home() {
   const handleRunTests = async () => {
     try {
-      const response = await fetch("../api/writeJson", {
+      /*const response = await fetch("../api/writeJson", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,7 +18,7 @@ export default function Home() {
 
       if (!response.ok) {
         throw new Error("Erreur lors de l'enregistrement du fichier JSON");
-      }
+      }*/
 
       const response1 = await fetch("../api/run-test", {
         method: "POST",
