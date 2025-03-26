@@ -19,7 +19,7 @@ export default function Home() {
   // Créer le client Supabase
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  const [options, setOptions] = useState(null); // Initialiser options avec null  
+  const [options, setOptions] = useState(); // Initialiser options avec null  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [editorContent, setEditorContent] = useState("");
 
@@ -37,6 +37,8 @@ export default function Home() {
 
         // Mettre à jour options avec le contenu récupéré  
         setOptions(data.content);
+        console.log("data : ", data);
+        console.log("options : ", options);
         setEditorContent(data.content[0]?.data); // Initialiser le contenu de l'éditeur avec le premier chapitre  
       } catch (error) {
         console.error("Erreur de chargement des données :", error);
@@ -59,7 +61,7 @@ export default function Home() {
       const { data, error } = await supabase  
         .from('livres')
         .update({
-          content: options.content,
+          content: options,
         })
         .eq('id', 1); // Utilisez l'ID de l'enregistrement
 
@@ -107,9 +109,8 @@ export default function Home() {
         updatedContent[currentIndex].data = editorContent;
         return { ...prev, content: updatedContent };
       });
-      
+      handleRunTests();
     }
-    handleRunTests();
   };
 
   const handlePromptForTitleChange = () => {
