@@ -15,7 +15,7 @@ if (os.platform() === 'win32') {
 }
 
 // Nom du fichier  
-const fileName = options.title;
+const fileName = options.title + ".epub";
 const filePath = path.join(downloadDir, fileName);
 
 // Modifier les options pour spécifier le chemin de destination  

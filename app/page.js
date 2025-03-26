@@ -1,75 +1,134 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic"; // Import dynamic from next/dynamic
 import "../styles/global.css"; // Import du fichier CSS global
+import { createClient } from '@supabase/supabase-js';
 
-let options = require("../public/livre.json");
+//let options = require("../public/livre.json");
 
 const QuillEditor = dynamic(() => import("../component/QuillEditor"), {
   ssr: false, // This ensures the QuillEditor is only rendered on the client
 });
 
 export default function Home() {
-  const [currentIndex, setCurrentIndex] = useState(0); // État pour suivre l'index actuel
-  const [editorContent, setEditorContent] = useState(
-    options.content[currentIndex]?.data
-  );
+  // Récupérer les variables d'environnement
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL; // URL de Supabase
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY; // Clé anonyme de Supabase
+
+  // Créer le client Supabase
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+  const [options, setOptions] = useState(null); // Initialiser options avec null  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [editorContent, setEditorContent] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Remplacez 'YourTitle' par le titre que vous souhaitez récupérer  
+        const { data, error } = await supabase  
+          .from('livres')
+          .select('*')
+          .eq('id', 1) // ou une autre condition pour identifier l'enregistrement  
+          .single(); // Récupérer un seul enregistrement
+
+        if (error) throw error;
+
+        // Mettre à jour options avec le contenu récupéré  
+        setOptions(data.content);
+        setEditorContent(data.content[0]?.data); // Initialiser le contenu de l'éditeur avec le premier chapitre  
+      } catch (error) {
+        console.error("Erreur de chargement des données :", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSelectPage = (index) => {
     setCurrentIndex(index);
+    setEditorContent(options.content[index]?.data); // Mettre à jour le contenu de l'éditeur  
   };
 
   const handleRunTests = async () => {
     try {
-      const response = await fetch("../api/writeJson", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(options), // Send the modified options in the request body
-      });
+      if (!options) return; // Ne pas exécuter si options est null
+
+      // Mettre à jour le contenu dans Supabase  
+      const { data, error } = await supabase  
+        .from('livres')
+        .update({
+          author: options.author,
+          content: options.content,
+        })
+        .eq('id', options.id); // Utilisez l'ID de l'enregistrement
+
+      if (error) throw error;
+      console.log('Données mises à jour avec succès:', data);
     } catch (error) {
       console.error("Erreur lors de l'exécution des tests :", error);
     }
   };
 
   const handleAddChapter = () => {
-    options.content.push({ title: "Chapitre :", data: "" });
+    if (options) {
+      setOptions((prev) => ({
+        ...prev,
+        content: [...prev.content, { title: "Chapitre :", data: "" }],
+      }));
+    }
     handleRunTests();
   };
 
   const handleDeleteChapter = () => {
-    options.content.splice(currentIndex, 1);
-    handleRunTests();
+    if (options) {
+      const updatedContent = options.content.filter((_, index) => index !== currentIndex);
+      setOptions((prev) => ({ ...prev, content: updatedContent }));
+      handleRunTests();
+    }
   };
 
   const handleTitleChange = () => {
-    const newTitle = prompt("Entrez le nouveau nom du Chapitre:", options.content[currentIndex].title);
-    options.content[currentIndex].title = newTitle;
-    handleRunTests();
+    const newTitle = prompt("Entrez le nouveau nom du Chapitre:", options.content[currentIndex]?.title);
+    if (newTitle) {
+      setOptions((prev) => {
+        const updatedContent = [...prev.content];
+        updatedContent[currentIndex].title = newTitle;
+        return { ...prev, content: updatedContent };
+      });
+      handleRunTests();
+    }
   };
 
   const handleContentChange = () => {
-    options.content[currentIndex].data = editorContent;
-    handleRunTests();
+    if (options) {
+      setOptions((prev) => {
+        const updatedContent = [...prev.content];
+        updatedContent[currentIndex].data = editorContent;
+        return { ...prev, content: updatedContent };
+      });
+      handleRunTests();
+    }
   };
 
   const handlePromptForTitleChange = () => {
-    const newTitle = prompt("Entrez le nouveau titre du Livre:", options.title);
-    if (newTitle !== null && newTitle.trim() !== "") {
-      options.title = newTitle;
+    const newTitle = prompt("Entrez le nouveau titre du Livre:", options?.title);
+    if (newTitle) {
+      setOptions((prev) => ({ ...prev, title: newTitle }));
       handleRunTests();
     }
   };
 
   const handlePromptForAuthorChange = () => {
-    const newTitle = prompt("Entrez le nouveau titre du Livre:", options.author);
-    if (newTitle !== null && newTitle.trim() !== "") {
-      options.author = newTitle;
+    const newAuthor = prompt("Entrez le nouveau nom de l'Auteur:", options?.author);
+    if (newAuthor) {
+      setOptions((prev) => ({ ...prev, author: newAuthor }));
       handleRunTests();
     }
   };
+
+  if (!options) return <div>Loading...</div>;
 
   return (
     <div className="h-full">

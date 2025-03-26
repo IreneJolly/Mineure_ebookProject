@@ -9,6 +9,7 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "@tailwindcss/postcss": "^4.0.9",
     "@tinymce/tinymce-react": "^5.1.1",
     "epub-gen": "^0.1.0",
