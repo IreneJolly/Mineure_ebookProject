@@ -5,8 +5,6 @@ import dynamic from "next/dynamic"; // Import dynamic from next/dynamic
 import "../styles/global.css"; // Import du fichier CSS global
 import { createClient } from '@supabase/supabase-js';
 
-//let options = require("../public/livre.json");
-
 const QuillEditor = dynamic(() => import("../component/QuillEditor"), {
   ssr: false, // This ensures the QuillEditor is only rendered on the client
 });
@@ -37,8 +35,6 @@ export default function Home() {
 
         // Mettre à jour options avec le contenu récupéré  
         setOptions(data.content);
-        console.log("data : ", data);
-        console.log("options : ", options);
         setEditorContent(data.content[0]?.data); // Initialiser le contenu de l'éditeur avec le premier chapitre  
       } catch (error) {
         console.error("Erreur de chargement des données :", error);
