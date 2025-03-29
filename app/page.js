@@ -62,7 +62,21 @@ export default function Home() {
         .eq('id', 1); // Utilisez l'ID de l'enregistrement
 
       if (error) throw error;
-      console.log('Données mises à jour avec succès:', data);
+
+      try {
+        // Remplacez 'YourTitle' par le titre que vous souhaitez récupérer  
+        const { data, error } = await supabase  
+          .from('livres')
+          .select('*')
+          .eq('id', 1) // ou une autre condition pour identifier l'enregistrement  
+          .single(); // Récupérer un seul enregistrement
+
+        if (error) throw error; 
+        console.log('Données mises à jour avec succès: ', data.content);
+      } catch (error) {
+        console.error("Erreur de chargement des données :", error);
+      }
+      
     } catch (error) {
       console.error("Erreur lors de l'exécution des tests :", error);
     }
@@ -95,6 +109,7 @@ export default function Home() {
         return { ...prev, content: updatedContent };
       });
       handleRunTests();
+      console.log("Nom chap 1 dans le bucket:", options.content[0].title);
     }
   };
 
