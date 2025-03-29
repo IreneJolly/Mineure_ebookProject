@@ -28,5 +28,8 @@
   },
   "browser": {
     "fs": false
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
