@@ -21,7 +21,7 @@ Cette application est construite avec les technologies suivantes :
 Pour exécuter ce projet localement, suivez les étapes suivantes :
 
 1. **Clonez le dépôt** :
-bash```
+```
 git clone https://github.com/votre-utilisateur/createur-ebook.git
 cd createur-ebook
 ```
@@ -34,4 +34,4 @@ cd createur-ebook
 
 ## Utilisation
 
-Pour modifier l'eBook enregistrer vous pouvez utiliser le lien Vercel mis en description du projet. Mais pour le télécharger il faut le lancer localement grace aux étapes si dessus
+Pour modifier l'eBook enregistrer vous pouvez utiliser le lien Vercel mis en description du projet. Mais pour le télécharger il faut le lancer localement grace aux étapes si dessus.
